@@ -1,0 +1,17 @@
+# Data
+data/*
+!data/README.md
+
+# Results
+results/*
+!results/.gitkeep
+
+# Environments / local stuff
+.env
+venv/
+.envrc
+
+# OS / editor junk
+.DS_Store
+*.swp
+.ipynb_checkpoints/
