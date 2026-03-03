@@ -1,17 +1,67 @@
-# Data
-data/*
-!data/README.md
+cat << 'EOF' >> .gitignore
+# Python
+__pycache__/
+*.pyc
 
-# Results
+# Logs
+*.log
+simulate_stdout.log
+simulate_stderr.log
+
+# Large data outputs (keep only raw metadata + scripts)
+data/*.bed
+data/*.bim
+data/*.fam
+data/*.nosex
+data/*.snplist
+data/*.raw
+data/*.log
+
+data/raw/ALL.chr22.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
+
+
+# But keep the small text metadata we want
+!data/README.md
+!data/raw/
+!data/raw/*.txt
+!data/raw/*.panel
+!data/raw/*.vcf.gz
+
+# Results (keep directory, ignore big files)
 results/*
 !results/.gitkeep
 
-# Environments / local stuff
-.env
-venv/
-.envrc
+# Plink root log
+plink.log
+EOF
+# Python
+__pycache__/
+*.pyc
 
-# OS / editor junk
-.DS_Store
-*.swp
-.ipynb_checkpoints/
+# Logs
+*.log
+simulate_stdout.log
+simulate_stderr.log
+
+# Large data outputs (keep only raw metadata + scripts)
+data/*.bed
+data/*.bim
+data/*.fam
+data/*.nosex
+data/*.snplist
+data/*.raw
+data/*.log
+
+# But keep the small text metadata we want
+!data/README.md
+!data/raw/
+!data/raw/*.txt
+!data/raw/*.panel
+!data/raw/*.vcf.gz
+
+# Results (keep directory, ignore big files)
+results/*
+!results/.gitkeep
+
+# Plink root log
+plink.log
