@@ -11,7 +11,7 @@ conda activate gwas_env
 pip install -r env/requirements.txt
 ```
 
-###Notes
+### Notes
 
 - This Python environment is only needed for analysis scripts under analysis/.
 - Core GWAS tools (PLINK, GCTA, GEMMA) are standalone binaries in bin/ and do not depend on this Python environment.
