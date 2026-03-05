@@ -59,3 +59,18 @@ for research. For details about usage and citation, see:
 
 - The International Genome Sample Resource (IGSR) website:
   https://www.internationalgenome.org
+
+4. Toy Example (For Quick Testing)
+----------------------------------
+
+Running the full pipeline on the entire Chromosome 22 can take some time. If you (or the TAs) wish to quickly test the computational mechanics of the scripts without waiting, you can generate a minimal "toy" dataset.
+
+Assuming you have already run Step 01 to generate the initial CHB dataset (`data/chr22_CHB.bed` etc.), you can use PLINK to extract a tiny subset (e.g., keeping only 5% of the SNPs) by running the following command from the project root:
+
+    plink --bfile data/chr22_CHB \
+          --thin 0.05 \
+          --make-bed \
+          --out data/toy_demo
+
+- `--thin 0.05`: Keeps roughly 5% of the variants randomly, drastically reducing file size and computation time.
+- Once `data/toy_demo.{bed,bim,fam}` is generated, you can temporarily modify the data prefix in the Step 03, 04, and 05 scripts to point to `data/toy_demo` to test the pipeline end-to-end in seconds.
