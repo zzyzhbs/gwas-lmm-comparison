@@ -1,0 +1,4 @@
+GWAS Comparison Summary
+-----------------------
+Linear (PLINK) lambda_GC: 1.0104
+LMM (GCTA) lambda_GC:    1.0016
