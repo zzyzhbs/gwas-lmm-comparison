@@ -19,7 +19,7 @@ RAW_SUBSET="${RAW_PREFIX}.raw"
 SNPLIST_ALL="${DATA_DIR}/chr22_CHB_qc.snplist"
 SNPLIST_SUBSET="${DATA_DIR}/chr22_CHB_qc_subset.snplist"
 
-# 1.1 检查 QC 后的 plink 文件是否存在
+# 1.1 Check that QC'ed PLINK files exist
 for ext in bed bim fam; do
   if [ ! -f "${BFILE_PREFIX}.${ext}" ]; then
     echo "ERROR: ${BFILE_PREFIX}.${ext} not found. Did you run scripts/02_qc.sh?"
@@ -27,13 +27,13 @@ for ext in bed bim fam; do
   fi
 done
 
-# 1.2 检查 Python 环境（要求有 numpy/pandas）
+# 1.2 Check Python availability (expects numpy/pandas installed)
 if ! command -v python >/dev/null 2>&1; then
-  echo "ERROR: python not found in PATH. Please activate your conda/env with Python + numpy + pandas."
+  echo "ERROR: python not found in PATH. Please activate an environment with Python + numpy + pandas."
   exit 1
 fi
 
-# 1.3 定位 PLINK
+# 1.3 Locate PLINK
 if command -v plink >/dev/null 2>&1; then
   PLINK="$(command -v plink)"
 else
@@ -43,13 +43,13 @@ fi
 
 log "Using PLINK: ${PLINK}"
 
-########## 2. 生成 SNP 列表并选取前若干个 SNP ##########
+########## 2. Create SNP list and select a subset ##########
 
-# 只在第一次运行时创建 snplist
+# Only create snplist on first run
 if [ ! -f "${SNPLIST_SUBSET}" ]; then
   log "Subset snplist not found. Generating SNP list and selecting subset..."
 
-  # 2.1 写出所有 SNP 名称
+  # 2.1 Write out all SNP IDs
   log "Writing full SNP list to: ${SNPLIST_ALL}"
   ${PLINK} \
     --bfile "${BFILE_PREFIX}" \
@@ -57,7 +57,7 @@ if [ ! -f "${SNPLIST_SUBSET}" ]; then
     --write-snplist \
     --out "${DATA_DIR}/chr22_CHB_qc"
 
-  # 2.2 从中取前 5000 个（如果总数不足 5000，就全用）
+  # 2.2 Take the first 5000 SNPs (or all if total < 5000)
   N_SNP=5000
   TOTAL_SNP=$(wc -l < "${SNPLIST_ALL}")
   if [ "${TOTAL_SNP}" -lt "${N_SNP}" ]; then
@@ -70,7 +70,7 @@ else
   log "Found existing subset snplist: ${SNPLIST_SUBSET}"
 fi
 
-########## 3. 导出 SNP 子集为 .raw ##########
+########## 3. Export SNP subset to .raw ##########
 
 if [ ! -f "${RAW_SUBSET}" ]; then
   log "Subset .raw file not found. Exporting genotype subset with PLINK --recode A..."
@@ -87,7 +87,7 @@ else
   log "Found existing subset genotype file: ${RAW_SUBSET}"
 fi
 
-########## 4. 调用 Python 脚本模拟 phenotype ##########
+########## 4. Call Python script to simulate phenotype ##########
 
 N_CAUSAL=20
 SEED=42

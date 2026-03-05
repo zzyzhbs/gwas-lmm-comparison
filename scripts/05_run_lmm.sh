@@ -3,13 +3,14 @@ set -euo pipefail
 
 ############################################################
 # 05_run_lmm.sh
-# 使用 LMM 跑 GWAS（默认用 GCTA，可通过 GCTA_BIN 环境变量调整路径）
+# Run GWAS using a linear mixed model (LMM) via GCTA.
+# GCTA path can be customized via the GCTA_BIN environment variable.
 ############################################################
 
-# --------- 1. 解析 GCTA 路径（可配置） ---------
+# --------- 1. Resolve GCTA binary path (configurable) ---------
 
 if [[ -n "${GCTA_BIN:-}" ]]; then
-    # 如果用户在命令行或环境里显式设置了 GCTA_BIN，就用它
+    # Use GCTA_BIN if explicitly set by the user in the environment or command line
     echo "[INFO] Using GCTA from GCTA_BIN: ${GCTA_BIN}"
 elif command -v gcta64 &> /dev/null; then
     GCTA_BIN=$(command -v gcta64)
@@ -24,7 +25,7 @@ if [[ ! -x "${GCTA_BIN}" ]]; then
     exit 1
 fi
 
-# --------- 2. 解析参数 & 文件路径 ---------
+# --------- 2. Parse arguments & set file paths ---------
 
 BFILE_PREFIX=${1:-data/chr22_CHB_qc}
 PHENO_FILE=${2:-data/chr22_CHB_pheno.txt}
@@ -42,7 +43,7 @@ echo "[INFO] BFILE prefix : ${BFILE_PREFIX}"
 echo "[INFO] Pheno file   : ${PHENO_FILE}"
 echo "[INFO] Output prefix: ${OUT_PREFIX}"
 
-# --------- 3. 构建 GRM（如果不存在） ---------
+# --------- 3. Build GRM if it does not exist ---------
 
 GRM_PREFIX="${OUT_PREFIX}_grm"
 
@@ -56,7 +57,7 @@ else
       --out "${GRM_PREFIX}"
 fi
 
-# --------- 4. 运行 LMM GWAS（MLMA） ---------
+# --------- 4. Run LMM GWAS (MLMA) ---------
 
 echo "[INFO] Running GCTA MLMA..."
 

@@ -3,7 +3,7 @@ set -euo pipefail
 
 ##############################################
 # 01_prepare_data.sh
-# Download 1000G chr22 VCF, extract CHB, convert to PLINK.
+# Download 1000 Genomes chr22 VCF, extract CHB samples, convert to PLINK.
 ##############################################
 
 ########## 0. Locate PLINK ##########
@@ -29,7 +29,6 @@ OUT_PREFIX="chr22_${POP}"
 DATA_DIR="data"
 RAW_DIR="${DATA_DIR}/raw"
 OUT_DIR="${DATA_DIR}"
-
 
 ########## Helper ##########
 
@@ -87,7 +86,7 @@ if [ -f "${CHB_LIST}" ]; then
 else
   log "Extracting CHB sample IDs from panel file..."
   # Typical columns: sampleID population sex super_population ...
-  # We assume the 2nd column is the population code.
+  # Assumes the 2nd column contains the population code.
   awk '$2 == "CHB" {print $1}' "${PANEL_FILE}" > "${CHB_LIST}"
 
   N_CHB=$(wc -l < "${CHB_LIST}" | tr -d ' ')
@@ -99,7 +98,7 @@ else
   fi
 fi
 
-# Ensure we always have a two-column FID/IID file for --keep
+# Always create a two-column FID/IID file for PLINK --keep
 log "Creating two-column FID/IID keep file for CHB..."
 awk 'NF > 0 {print $1, $1}' "${CHB_LIST}" > "${CHB_KEEP}"
 
