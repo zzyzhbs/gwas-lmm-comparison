@@ -22,6 +22,8 @@ To reproduce this pipeline, the following tools and libraries are required:
 You can run this pipeline seamlessly on JupyterHub by activating a standard conda environment containing `numpy`/`pandas` and ensuring `plink` and `gcta64` are in your `$PATH` or specified via the `GCTA_BIN` environment variable.
 
 ## Repository Structure
+
+```text
 .
 ├── README.md                 # Main project documentation
 ├── run_pipeline_01_05.py     # Master interactive Python driver for steps 01-05
@@ -31,7 +33,7 @@ You can run this pipeline seamlessly on JupyterHub by activating a standard cond
 ├── results/                  # Directory for PLINK/GCTA association outputs
 │   └── plots/                # Directory for generated Q-Q and Manhattan plots
 └── doc/                      # Project report and presentation outlines
-
+````
 
 ## Current Progress (as of 2026-03-02)
 
