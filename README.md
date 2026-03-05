@@ -98,7 +98,7 @@ python analysis/compare_plink_lmm.py \
 All plots and summary statistics will be saved under:
 
 ```bash
-python run_pipeline_01_05.py
+results/plots
 ```
 ## Remaining Work & Challenges for Peer Review
 
