@@ -98,5 +98,17 @@ python analysis/compare_plink_lmm.py \
 All plots and summary statistics will be saved under:
 
 ```bash
-results/plots/
+python run_pipeline_01_05.py
 ```
+## Remaining Work & Challenges for Peer Review
+
+### Remaining Tasks (Last Week)
+- Draft the final written report: Populate the `report_outline.md` with detailed explanations, methodology, and result interpretations.
+- Prepare presentation slides: Convert `slides_outline.md` into the final slide deck for the class presentation.
+- Polish visualizations: Ensure all axes, legends, and titles on the Q-Q and Manhattan plots are perfectly formatted for the final report.
+- Final code review: Do a final walkthrough of the interactive Python driver to ensure it runs flawlessly for the TAs' grading process.
+
+### Challenges & Topics for Peer Discussion
+- Trait Simulation Realism: We simulated a quantitative trait under a basic additive genetic model. We'd like to discuss with peers if incorporating more complex architectures (e.g., dominant/recessive effects, or environmental covariates) would drastically alter the performance gap between standard linear regression and LMM.
+- Scalability Bottlenecks: Our pipeline works efficiently for chromosome 22 of the CHB sub-population. However, calculating the Genetic Relationship Matrix (GRM) in GCTA is computationally expensive. We want to discuss the computational challenges of scaling this pipeline to whole-genome data or massive cohorts like the UK Biobank.
+- Interpreting Mild Inflation: Our baseline PLINK lambda_GC was 1.0125, which represents relatively mild inflation (likely because the CHB dataset is an isolated, relatively homogeneous population). We'd love to hear how other groups handled populations with more extreme stratification (e.g., admixed populations) and how their LMM corrected it compared to our baseline.
