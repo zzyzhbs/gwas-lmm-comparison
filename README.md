@@ -9,6 +9,30 @@ This repository contains code and scripts for our UCSD CSE284 course project (Op
 
 The comparison will focus on genomic inflation factor (λ_GC), Manhattan plots, and Q–Q plots, to evaluate how each method handles population structure and related confounding factors.
 
+## Dependencies & Installation
+
+To reproduce this pipeline, the following tools and libraries are required:
+
+* PLINK (v1.9+): Required for basic data processing and standard linear regression GWAS.
+* GCTA (v1.9+): Required for generating the Genetic Relationship Matrix (GRM) and running the Linear Mixed Model (MLMA). 
+* Python 3: Required for the master execution script and phenotype simulation.
+  * Packages: `numpy`, `pandas`
+* R / Python: Required for downstream analysis and generating visualization plots (Q-Q and Manhattan plots).
+
+You can run this pipeline seamlessly on JupyterHub by activating a standard conda environment containing `numpy`/`pandas` and ensuring `plink` and `gcta64` are in your `$PATH` or specified via the `GCTA_BIN` environment variable.
+
+## Repository Structure
+.
+├── README.md                 # Main project documentation
+├── run_pipeline_01_05.py     # Master interactive Python driver for steps 01-05
+├── scripts/                  # Core bash and python scripts for data prep, QC, and GWAS
+├── analysis/                 # Scripts for calculating lambda_GC and plotting
+├── data/                     # Directory for genotype (.bed/.bim/.fam) and phenotype files
+├── results/                  # Directory for PLINK/GCTA association outputs
+│   └── plots/                # Directory for generated Q-Q and Manhattan plots
+└── doc/                      # Project report and presentation outlines
+
+
 ## Current Progress (as of 2026-03-02)
 
 The following components of the pipeline have been implemented and tested end-to-end.
@@ -54,3 +78,13 @@ The following figure was automatically generated using the `analysis/compare_pli
 * **Inflation Control**: The LMM showed better control of inflation compared to standard linear regression, with $\lambda_{GC}$ moving from 1.01 down to 1.00.
 * **Q-Q Plot Stability**: As shown in the Q-Q plot, the LMM (blue points) follows the expected null distribution more closely than the linear model (grey points), effectively reducing potential false positives.
 * **Manhattan Plot Consistency**: Both models identified consistent peaks, but LMM provided a more statistically rigorous assessment of significance.
+
+## How to Run (Quick Start)
+
+We have provided an interactive master script to run the entire pipeline from Step 01 to Step 05. 
+
+1. Clone the repository and navigate to the root directory.
+2. Ensure your environment is set up (activate your conda environment and export `GCTA_BIN` if necessary).
+3. Execute the master driver:
+```bash
+python run_pipeline_01_05.py
