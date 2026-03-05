@@ -25,33 +25,22 @@ You can run this pipeline seamlessly on JupyterHub by activating a standard cond
 
 ```text
 .
-├── README.md                 # Main project documentation
-├── run_pipeline_01_05.py     # Master interactive Python driver for steps 01-05
-├── scripts/                  # Core bash and python scripts for data prep, QC, and GWAS
-├── analysis/                 # Scripts for calculating lambda_GC and plotting
-├── data/                     # Directory for genotype (.bed/.bim/.fam) and phenotype files
-├── results/                  # Directory for PLINK/GCTA association outputs
-│   └── plots/                # Directory for generated Q-Q and Manhattan plots
-└── doc/                      # Project report and presentation outlines
+├── README.md                     # Main project documentation
+├── run_pipeline_01_05.py         # Master interactive Python driver for steps 01-05
+├── scripts/                      # Core bash and python scripts for data prep, QC, and GWAS
+│   ├── 01_prepare_data.sh        # Prepares and converts 1000G CHB chr22 data
+│   ├── 02_qc.sh                  # Performs basic genotype QC (MAF, missingness)
+│   ├── 03_make_phenotype.sh      # Wrapper to call the simulation script
+│   ├── simulate_phenotype.py     # Python logic for simulating quantitative traits
+│   ├── 04_run_plink_linear.sh    # Runs baseline standard linear regression (PLINK)
+│   └── 05_run_lmm.sh             # Runs Linear Mixed Model (GCTA/MLMA)
+├── analysis/                     # Scripts for calculating lambda_GC and plotting
+├── data/                         # Directory for genotype (.bed/.bim/.fam) and phenotype files
+├── results/                      # Directory for PLINK/GCTA association outputs
+│   └── plots/                    # Directory for generated Q-Q and Manhattan plots
+└── doc/                          # Project report and presentation outlines
 ````
 
-## Current Progress (as of 2026-03-02)
-
-The following components of the pipeline have been implemented and tested end-to-end.
-
-+ `scripts/01_prepare_data.sh`: Check for a recent PLINK (>= 1.9) on PATH, download 1000 Genomes Phase 3 chr22 data and sample panel, extract the CHB subset, and convert the chr22 CHB VCF to PLINK binary format (.bed/.bim/.fam).
-
-+ `scripts/02_qc.sh`: Perform basic genotype quality control on the chr22 CHB PLINK dataset (e.g., filters based on minor allele frequency and missingness) and produce a cleaned dataset with prefix like data/chr22_CHB_qc.
-
-+ `scripts/03_make_phenotype.sh`: Based on the QC’ed PLINK dataset, call a Python script (simulate_phenotype.py) to simulate a quantitative trait under an additive genetic model and write phenotype files compatible with PLINK and GCTA.
-
-+ `scripts/simulate_phenotype.py`: Implement the actual phenotype simulation logic on top of the real genotype matrix, controlling how SNP effects are generated and how the quantitative phenotype values are constructed.
-
-+ `scripts/04_run_plink_linear.sh`: Run GWAS using PLINK linear regression (e.g., --linear) with the QC’ed genotypes and simulated phenotype, and output baseline association results such as results/chr22_CHB_plink_linear.assoc.linear.
-
-+ `scripts/05_run_lmm.sh`: Locate the GCTA binary via the GCTA_BIN environment variable or gcta64 on PATH, construct a GRM from the QC’ed genotypes if needed, run LMM/MLMA association with GCTA, and produce results such as results/chr22_CHB_gcta_lmm.mlma.
-
-+ `run_pipeline_01_05.py`: Provide an interactive Python driver that sequentially runs steps 01–05, prints a short description before each step, waits for user confirmation (press Enter) to proceed, handles errors by allowing retry or skip for each step, and summarizes the locations of the key PLINK and GCTA output files at the end.
 
 ## Preliminary Results
 
