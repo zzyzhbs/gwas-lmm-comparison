@@ -74,8 +74,29 @@ The following figure was automatically generated using the `analysis/compare_pli
 
 We have provided an interactive master script to run the entire pipeline from Step 01 to Step 05. 
 
-1. Clone the repository and navigate to the root directory.
-2. Ensure your environment is set up (activate your conda environment and export `GCTA_BIN` if necessary).
+1. Clone the repository and navigate to the root directory.  
+2. Ensure your environment is set up (activate your conda environment and export `GCTA_BIN` if necessary).  
 3. Execute the master driver:
+
 ```bash
 python run_pipeline_01_05.py
+```
+
+This will generate the GWAS results for both PLINK (linear regression) and GCTA (LMM).
+
+---
+
+To generate summary plots (λGC calculation, Manhattan plots, and Q–Q plots) from the GWAS results, run the following command from the repository root:
+
+```bash
+python analysis/compare_plink_lmm.py \
+  --plink results/chr22_CHB_plink_linear.assoc.linear \
+  --lmm   results/chr22_CHB_gcta_lmm.mlma \
+  --out   results/plots/
+```
+
+All plots and summary statistics will be saved under:
+
+```bash
+results/plots/
+```
