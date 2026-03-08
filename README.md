@@ -62,7 +62,7 @@ $$\lambda_{GC} = \frac{\text{median}(\chi^2_{\text{obs}})}{0.4549}$$
 ### 3. Comparison Visualization
 The following figure was automatically generated using the `analysis/compare_plink_lmm.py` script.
 
-![GWAS Comparison](results/plots/qq_comparison.png)
+![GWAS Comparison](results/plots/qq_comparison.png?v=2)
 
 ### 4. Interpretation
 * **Inflation Control**: The LMM showed better control of inflation compared to standard linear regression, with $\lambda_{GC}$ moving from 1.01 down to 1.00.
