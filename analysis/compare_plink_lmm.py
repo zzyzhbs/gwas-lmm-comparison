@@ -21,7 +21,7 @@ def get_qq_coords(p_values):
     n = len(p_sorted)
     expected = -np.log10(np.arange(1, n + 1) / (n + 1))
     observed = -np.log10(p_sorted)
-    return expected[::-1], observed
+    return expected, observed   
 
 def run_analysis(plink_path, lmm_path, out_dir):
     os.makedirs(out_dir, exist_ok=True)
@@ -48,9 +48,13 @@ def run_analysis(plink_path, lmm_path, out_dir):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
 
     # Manhattan Plot
-    ax1.scatter(df_lin['BP'], -np.log10(df_lin['P']), c='lightgrey', s=10, label=f'Linear (λ={lam_lin:.2f})')
-    ax1.scatter(df_lmm['bp'], -np.log10(df_lmm['p']), c='royalblue', s=10, alpha=0.7, label=f'LMM (λ={lam_lmm:.2f})')
-    ax1.axhline(-np.log10(5e-8), color='red', linestyle='--', label='Genome-wide Significance')
+    ax1.scatter(df_lin['BP'], -np.log10(df_lin['P']),
+                c='pink', s=10, label=f'Linear (λ={lam_lin:.2f})')
+    ax1.scatter(df_lmm['bp'], -np.log10(df_lmm['p']),
+                c='royalblue', s=10, alpha=0.1,  
+                label=f'LMM (λ={lam_lmm:.2f})')
+    ax1.axhline(-np.log10(5e-8), color='red', linestyle='--',
+                label='Genome-wide Significance')
     ax1.set_title('Manhattan Plot: Linear vs LMM')
     ax1.set_ylabel('-log10(P)')
     ax1.legend()
@@ -58,14 +62,18 @@ def run_analysis(plink_path, lmm_path, out_dir):
     # Q-Q Plot
     ex_lin, ob_lin = get_qq_coords(df_lin['P'])
     ex_lmm, ob_lmm = get_qq_coords(df_lmm['p'])
-    ax2.scatter(ex_lin, ob_lin, c='lightgrey', s=10, label='Linear')
-    ax2.scatter(ex_lmm, ob_lmm, c='royalblue', s=10, label='LMM')
+    ax2.scatter(ex_lin, ob_lin,
+                c='pink', s=10, label='Linear')
+    ax2.scatter(ex_lmm, ob_lmm,
+                c='royalblue', s=10, alpha=0.1,  
+                label='LMM')
     max_val = max(max(ex_lin), max(ex_lmm))
     ax2.plot([0, max_val], [0, max_val], 'k--')
     ax2.set_title('Q-Q Plot: Inflation Control')
     ax2.set_xlabel('Expected -log10(P)')
     ax2.set_ylabel('Observed -log10(P)')
     ax2.legend()
+
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "qq_comparison.png"), dpi=300)
