@@ -119,32 +119,38 @@ fi
 # --------------------------------------------------
 # 4. Download & configure GCTA (Linux x86_64)
 #
+#    The GCTA binary is distributed as an AppImage,
+#    which requires FUSE to run directly. Since FUSE
+#    is typically unavailable on shared/containerized
+#    environments (e.g., UCSD DataHub), we ALWAYS
+#    download a fresh copy, extract the AppImage,
+#    and point GCTA_BIN to the native binary inside.
+#
 #    All platform builds are available at:
 #    https://yanglab.westlake.edu.cn/software/gcta/#Download
-#
-#    Below we download the Linux x86_64 v1.95.1 binary,
-#    unzip it into ./bin, and export GCTA_BIN so the
-#    pipeline scripts can find it automatically.
 # --------------------------------------------------
 GCTA_URL="https://yanglab.westlake.edu.cn/software/gcta/bin/gcta-1.95.1-linux-x86_64.zip"
 GCTA_DIR="./bin/gcta-1.95.1-linux-x86_64"
 
-if [[ -n "${GCTA_BIN:-}" && -x "${GCTA_BIN}" ]]; then
-    # User already configured GCTA_BIN — respect it
-    echo "[INFO] Using existing GCTA_BIN: ${GCTA_BIN}"
-elif command -v gcta64 &>/dev/null; then
-    export GCTA_BIN="$(command -v gcta64)"
-    echo "[INFO] Using GCTA from PATH: ${GCTA_BIN}"
-else
-    echo "[INFO] GCTA not found — downloading to ./bin ..."
-    mkdir -p ./bin
-    wget -q --show-progress -O ./bin/gcta.zip "${GCTA_URL}"
-    unzip -o ./bin/gcta.zip -d ./bin
-    rm -f ./bin/gcta.zip
-    chmod +x "${GCTA_DIR}/gcta64"       # ← make sure it's executable
-    export GCTA_BIN="${GCTA_DIR}/gcta64"
-    echo "[INFO] GCTA installed at: ${GCTA_BIN}"
-fi
+echo "[INFO] Downloading GCTA to ./bin ..."
+mkdir -p ./bin
+rm -rf "${GCTA_DIR}"                   # clean up any previous (broken) install
+wget -q --show-progress -O ./bin/gcta.zip "${GCTA_URL}"
+unzip -o ./bin/gcta.zip -d ./bin
+rm -f ./bin/gcta.zip
+
+# --- Extract the AppImage (no FUSE required) ---
+echo "[INFO] Extracting AppImage (no FUSE needed)..."
+cd "${GCTA_DIR}"
+chmod +x gcta64
+./gcta64 --appimage-extract            # creates ./squashfs-root/
+cd - >/dev/null                        # return to repo root
+
+GCTA_EXTRACTED="${GCTA_DIR}/squashfs-root/usr/bin/gcta64"
+chmod +x "${GCTA_EXTRACTED}"
+export GCTA_BIN="$(realpath "${GCTA_EXTRACTED}")"
+echo "[INFO] GCTA ready at: ${GCTA_BIN}"
+
 
 # --------------------------------------------------
 # 5. Run the full GWAS pipeline (Steps 01–05)
