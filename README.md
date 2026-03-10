@@ -40,6 +40,27 @@ You can run this pipeline seamlessly on JupyterHub by activating a standard cond
 └── doc/                          # Project report and presentation outlines
 ````
 
+## How We Created the Phenotype Data
+
+Since the 1000 Genomes Project does not provide quantitative phenotype data, we **simulated a quantitative trait** based on an additive genetic model. The process is handled in **Step 03** of our pipeline (`03_simulate_pheno.sh` + `simulate_phenotype.py`):
+
+### Step-by-step procedure
+
+1. **Select a SNP subset** — From the QC-passed CHB genotype data (chr22), we extract the first **5,000 SNPs** and export them in additive coding format (PLINK `--recode A`), where each genotype is encoded as 0/1/2 copies of the minor allele.
+
+2. **Randomly pick causal SNPs** — The Python script (`simulate_phenotype.py`) randomly selects **20 causal SNPs** out of the 5,000 (with a fixed random seed = 42 for reproducibility).
+
+3. **Simulate the trait using an additive model** — The phenotype is generated following the standard additive genetic model:
+
+   $$Y = X_{\text{causal}} \boldsymbol{\beta} + \boldsymbol{\epsilon}$$
+
+   where $$X_{\text{causal}}$$ is the genotype matrix at the 20 causal SNPs, $$\boldsymbol{\beta}$$ represents the simulated effect sizes, and $$\boldsymbol{\epsilon}$$ is a random noise (environmental) term.
+
+4. **Output** — The resulting phenotype file (`chr22_CHB_pheno.txt`) is written in PLINK-compatible format (FID, IID, phenotype) and used by both the PLINK linear regression (Step 04) and GCTA LMM (Step 05) analyses.
+
+### Why simulate?
+
+This approach gives us **known ground truth** — we know exactly which 20 SNPs are truly causal, which allows us to meaningfully evaluate and compare how well each GWAS method (linear regression vs. LMM) recovers the true signals and controls for false positives (as measured by $$\lambda_{\text{GC}}$$, Q–Q plots, and Manhattan plots).
 
 ## Preliminary Results
 
@@ -191,7 +212,7 @@ echo "    results/plots/"
 
 ## Remaining Work & Challenges for Peer Review
 
-### Remaining Tasks (Last Week)
+### Remaining Tasks (9th Week)
 - Draft the final written report: Populate the `report_outline.md` with detailed explanations, methodology, and result interpretations.
 - Prepare presentation slides: Convert `slides_outline.md` into the final slide deck for the class presentation.
 - Polish visualizations: Ensure all axes, legends, and titles on the Q-Q and Manhattan plots are perfectly formatted for the final report.
